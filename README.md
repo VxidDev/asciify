@@ -11,11 +11,11 @@ A lightweight C CLI tool that converts images and videos into ASCII art with con
 - CLI-based interface
 - Built with C for performance and low-level control
 - Uses stb_image for image loading
+- Colored ASCII output
 
 Planned features:
 - Video to ASCII conversion
 - Custom `.ascii` binary format
-- Colored ASCII output
 - Improved scaling and dithering
 
 ---
@@ -32,8 +32,9 @@ Planned features:
 │   ├── convert.c
 │   └── main.c
 ├── image.png
+├── README.md
+├── LICENSE
 └── makefile
-
 ````
 
 ---
@@ -79,6 +80,7 @@ This produces the executable:
 ```
 -h, --help            Show help message
 -w, --width <num>     Output width (default: 100)
+-c, --color           Enable ANSI color formatting
 ```
 
 ---
@@ -86,7 +88,7 @@ This produces the executable:
 ## How it works
 
 1. Load image using stb_image
-2. Convert pixels to grayscale
+2. Convert pixels to grayscale 
 3. Map brightness to ASCII characters
 4. Scale output based on target width
 5. Print result to terminal
@@ -105,7 +107,6 @@ This produces the executable:
 
 * Video support via frame extraction
 * `.ascii` binary format
-* ANSI color output
 * Improved scaling algorithms
 * Dithering support
 

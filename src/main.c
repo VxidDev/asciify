@@ -13,6 +13,7 @@ char ascii[] = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:
 
 const char *filename = NULL;
 unsigned int outputWidth = 50;
+int color = 0;
 
 void parseArgs(const int argc, const char **argv) {
   if (argc < (MIN_ARG_AMOUNT + 1)) {
@@ -45,13 +46,15 @@ void parseArgs(const int argc, const char **argv) {
         printf("asciify: invalid number \"%s\"", argv[i]);
         exit(1);
       }
+    } else if (strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--color") == 0) {
+      color = 1;
     } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
       printf(
         "Usage: %s [file] [options]\n"
         "\n  Options:"
         "\n     -h, --help              Show this help message"
         "\n     -w, --width <num>       ASCII art's output width in chars (default: 50)"
-        "\n", 
+        "\n     -c, --color             Enable ANSI color formatting\n", 
         argv[0]
       );
       exit(0);
@@ -64,14 +67,14 @@ int main(const int argc, const char **argv) {
 
   int width, height, channels;
 
-  unsigned char* img = stbi_load(filename, &width, &height, &channels, 1);
+  unsigned char* img = stbi_load(filename, &width, &height, &channels, color ? 4 : 1);
 
   if (!img) {
     printf("asciify: failed to load image.\n");
     return 1;
   } 
 
-  convert(height, width, outputWidth, ascii, ASCII_LENGTH, img);
+  convert(height, width, outputWidth, ascii, ASCII_LENGTH, img, color);
 
   stbi_image_free(img);
 
