@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <string.h>
 
-char ascii[] = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
-#define ASCII_LENGTH 70
+const char *ascii = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
+size_t ASCII_LENGTH;
 
 #define MIN_ARG_AMOUNT 1
 
@@ -48,14 +48,24 @@ void parseArgs(const int argc, const char **argv) {
       }
     } else if (strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--color") == 0) {
       color = 1;
+    } else if (strcmp(argv[i], "-C") == 0 || strcmp(argv[i], "--charset") == 0){
+      if (i + 1 >= argc) {
+        printf("asciify: string expected.\n");
+        exit(1);
+      }
+
+      i++;
+
+      ascii = argv[i];
     } else if (strcmp(argv[i], "-h") == 0 || strcmp(argv[i], "--help") == 0) {
       printf(
-        "Usage: %s [file] [options]\n"
-        "\n  Options:"
-        "\n     -h, --help              Show this help message"
-        "\n     -w, --width <num>       ASCII art's output width in chars (default: 50)"
-        "\n     -c, --color             Enable ANSI color formatting\n", 
-        argv[0]
+        "Usage: %s [file] [options]\n\n"
+        "  Options:\n"
+        "     -h, --help              Show this help message\n"
+        "     -w, --width <num>       ASCII art's output width in chars (default: 50)\n"
+        "     -c, --color             Enable ANSI color formatting\n"
+        "     -C, --charset <str>     Use custom charset\n"
+        , argv[0]
       );
       exit(0);
     }
@@ -64,6 +74,13 @@ void parseArgs(const int argc, const char **argv) {
 
 int main(const int argc, const char **argv) {
   parseArgs(argc, argv);
+
+  if (!filename) {
+    printf("asciify: file name required.\n");
+    return 1;
+  }
+
+  ASCII_LENGTH = strlen(ascii);
 
   int width, height, channels;
 

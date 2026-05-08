@@ -12,6 +12,7 @@ A lightweight C CLI tool that converts images and videos into ASCII art with con
 - Built with C for performance and low-level control
 - Uses stb_image for image loading
 - Colored ASCII output
+- Custom charset support
 
 Planned features:
 - Video to ASCII conversion
@@ -81,6 +82,7 @@ This produces the executable:
 -h, --help            Show help message
 -w, --width <num>     Output width (default: 100)
 -c, --color           Enable ANSI color formatting
+-C, --charset         Use custom charset 
 ```
 
 ---
@@ -92,14 +94,6 @@ This produces the executable:
 3. Map brightness to ASCII characters
 4. Scale output based on target width
 5. Print result to terminal
-
----
-
-## Notes
-
-* Uses stb_image for image decoding
-* ASCII mapping is based on pixel brightness
-* Terminal output assumes fixed-width font
 
 ---
 
