@@ -2,6 +2,7 @@
 #include "stb_image.h"
 
 #include "../include/convert.h"
+#include "../include/convert-video.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -13,6 +14,7 @@ size_t ASCII_LENGTH;
 
 const char *filename = NULL;
 unsigned int outputWidth = 50;
+unsigned int fps = 30;
 int color = 0;
 
 void parseArgs(const int argc, const char **argv) {
@@ -43,9 +45,25 @@ void parseArgs(const int argc, const char **argv) {
       outputWidth = strtoul(argv[i], &end, 10);
 
       if (*end != '\0') {
-        printf("asciify: invalid number \"%s\"", argv[i]);
+        printf("asciify: invalid number \"%s\"\n", argv[i]);
         exit(1);
       }
+    } else if (strcmp(argv[i], "-f") == 0 || strcmp(argv[i], "--fps") == 0) {
+      if (i + 1 >= argc) {
+        printf("asciify: number expected.\n");
+        exit(1);
+      }
+
+      i++;
+
+      char *end;
+
+      fps = strtoul(argv[i], &end, 10);
+
+      if (*end != '\0') {
+        printf("asciify: invalid number \"%s\"\n", argv[i]);
+        exit(1);
+      } 
     } else if (strcmp(argv[i], "-c") == 0 || strcmp(argv[i], "--color") == 0) {
       color = 1;
     } else if (strcmp(argv[i], "-C") == 0 || strcmp(argv[i], "--charset") == 0){
@@ -65,6 +83,7 @@ void parseArgs(const int argc, const char **argv) {
         "     -w, --width <num>       ASCII art's output width in chars (default: 50)\n"
         "     -c, --color             Enable ANSI color formatting\n"
         "     -C, --charset <str>     Use custom charset\n"
+        "     -f, --fps <num>         Output framerate\n"
         , argv[0]
       );
       exit(0);
@@ -79,10 +98,11 @@ int main(const int argc, const char **argv) {
     printf("asciify: file name required.\n");
     return 1;
   }
-
+  
+  int width, height, channels;
   ASCII_LENGTH = strlen(ascii);
 
-  int width, height, channels;
+  if (convertVideo(filename, ASCII_LENGTH, ascii, color, outputWidth, fps)) return 0;
 
   unsigned char* img = stbi_load(filename, &width, &height, &channels, color ? 4 : 1);
 
@@ -91,7 +111,7 @@ int main(const int argc, const char **argv) {
     return 1;
   } 
 
-  convert(height, width, outputWidth, ascii, ASCII_LENGTH, img, color);
+  convert(height, width, outputWidth, ascii, ASCII_LENGTH, img, color, 4);
 
   stbi_image_free(img);
 

@@ -1,7 +1,7 @@
 #include "../include/convert.h"
 #include <stdio.h>
 
-void convert(const int height, const int width, const int outputWidth, const char *charset, const int charsetLength, unsigned char *img, const int color) {
+void convert(const int height, const int width, const int outputWidth, const char *charset, const int charsetLength, unsigned char *img, const int color, const int channels) {
   if (!img) return;
 
   float aspect = (float)height / width;
@@ -17,7 +17,7 @@ void convert(const int height, const int width, const int outputWidth, const cha
       unsigned char brightness;
 
       if (color) {
-        index *= 4;
+        index *= channels;
       
         unsigned char r = img[index];
         unsigned char g = img[index + 1];
